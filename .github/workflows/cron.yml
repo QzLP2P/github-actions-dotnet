@@ -1,0 +1,14 @@
+name: Run at 00:00 on the first day of the month
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"
+
+jobs:
+  build:
+    name: Run at 00:00 on the first day of the month
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: dotnet format
+        run: echo "Run at 00:00 on the first day of the month"
