@@ -22,3 +22,6 @@ jobs:
 
       - name: dotnet test
         run: dotnet test --configuration Release --no-build --verbosity normal
+
+      - name: dotnet format
+        run: dotnet format --verbosity detailed --verify-no-changes
