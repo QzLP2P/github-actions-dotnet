@@ -27,3 +27,21 @@ jobs:
         with:
           name: api-artifact
           path: artifacts/
+
+  deploy_dev:
+    needs: build
+    name: "Deploy to dev"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        name: Download artifact
+        with:
+          name: api-artifact
+          path: artifacts-downloaded/
+
+      - name: "Deploy to Azure App Service"
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: app-something-tgi-doesnot-exist # Replace with good name
+          package: artifacts-downloaded/
