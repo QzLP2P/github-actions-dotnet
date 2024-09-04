@@ -36,6 +36,7 @@ jobs:
     needs: build
     name: "Deploy to dev"
     runs-on: ubuntu-latest
+    environment: dev # need to update federal identity to environment dev instead of branch:main
 
     steps:
       - uses: actions/download-artifact@v4
@@ -59,4 +60,35 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: app-something-tgi-doesnot-exist # Replace with good name
+          package: artifacts-downloaded/
+
+  deploy_prod:
+    needs: deploy_dev
+    name: "Deploy to prod"
+    runs-on: ubuntu-latest
+    # management environment secret
+    environment: prod # need to update federal identity to environment prod instead of branch:main
+
+    steps:
+      - uses: actions/download-artifact@v4
+        name: Download artifact
+        with:
+          name: api-artifact
+          path: artifacts-downloaded/
+
+      # create user aissgned managed identity in azure (grab the client id)
+      # federal credential -> github actions (register orga, repository set entity branch:main) -> add (need to switch when environment is added)
+      # then add to gihub at repo, settings, secrets and variable, actions
+      # don't forget to add permission
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: "Deploy to Azure App Service"
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: app-something-tgi-doesnot-exist-prod # Replace with good name
           package: artifacts-downloaded/
