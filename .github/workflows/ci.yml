@@ -4,6 +4,10 @@ on:
   push:
     branches: ["main"]
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     name: CI
@@ -43,6 +47,7 @@ jobs:
       # create user aissgned managed identity in azure (grab the client id)
       # federal credential -> github actions (register orga, repository set entity branch:main) -> add
       # then add to gihub at repo, settings, secrets and variable, actions
+      # don't forget to add permission
       - name: Azure login
         uses: azure/login@v2
         with:
