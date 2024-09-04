@@ -40,6 +40,16 @@ jobs:
           name: api-artifact
           path: artifacts-downloaded/
 
+      # create user aissgned managed identity in azure (grab the client id)
+      # federal credential -> github actions (register orga, repository set entity branch:main) -> add
+      # then add to gihub at repo, settings, secrets and variable, actions
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: "Deploy to Azure App Service"
         uses: azure/webapps-deploy@v2
         with:
